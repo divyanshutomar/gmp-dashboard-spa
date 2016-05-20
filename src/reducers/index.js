@@ -1,8 +1,13 @@
+//Node Module Imports
 import { combineReducers } from 'redux';
-import CompaniesReducer from './reducer_companies.js'
+import { routerReducer } from 'react-router-redux'
 
-const rootReducer = combineReducers({
-  companies: CompaniesReducer
+//User Module Imports
+import companiesReducer from './reducer_companies'
+import userReducer from './reducer_auth'
+
+export default combineReducers({
+	user: userReducer,
+	companies: companiesReducer,
+	routing: routerReducer
 });
-
-export default rootReducer;

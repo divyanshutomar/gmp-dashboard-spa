@@ -1,16 +1,17 @@
-import React from 'react';
+//Node Modules Imports
+import React from 'react'
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import { createStore, applyMiddleware } from 'redux';
-import promiseMiddleware from 'redux-promise';
 
-import App from './components/app';
-import reducers from './reducers';
+//User Modules Imports
+import Root from './containers/Root'
+import appStore from './store'
+import { loginUserSuccess } from './actions'
 
-const createStoreWithMiddleware = applyMiddleware(promiseMiddleware)(createStore);
-const myStore = createStoreWithMiddleware(reducers,window.devToolsExtension ? window.devToolsExtension() : undefined);
-ReactDOM.render(
-  <Provider store={myStore}>
-    <App />
-  </Provider>
-  , document.querySelector('.mainApp'));
+//Checking for Auth Token
+let token = localStorage.getItem('token');
+if (token !== null) {
+    appStore.dispatch(loginUserSuccess(token));
+}
+
+//Main App Rendering
+ReactDOM.render( <Root store={appStore} /> ,document.querySelector('.mainApp'));
