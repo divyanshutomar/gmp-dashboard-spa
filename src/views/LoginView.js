@@ -7,17 +7,17 @@ class LoginView extends React.Component {
 
   constructor(props) {
     super(props);
-    const redirectRoute = this.props.location.query.next || '/';
+    // const redirectRoute = this.props.location.query.next || '/';
     this.state = {
       email: '',
       password: '',
-      redirectTo: redirectRoute
+      // redirectTo: redirectRoute
     };
   }
 
   login(e) {
       e.preventDefault();
-      this.props.actions.loginUser(this.state.email, this.state.password,this.state.redirectTo);
+      this.props.actions.loginUser(this.state.email, this.state.password);
   }
   emailC (event) {
     this.setState({email:event.target.value});
@@ -30,16 +30,28 @@ class LoginView extends React.Component {
       <div className="container">  
               <h3 className="center-align">Login</h3>
               <div className="row">
-                  <form className="col s12">
+                  <form onSubmit={this.login.bind(this)}>
                       <div className="row">
                           <div className="input-field col s12">
-                              <input id="email" type="email" value={this.state.email} onChange={this.emailC.bind(this)} className="validate"/>
+                              <input 
+                              id="email" 
+                              type="text" 
+                              value={this.state.email} 
+                              onChange={this.emailC.bind(this)}
+                              disabled={this.props.isAuthenticating} 
+                              className="validate"/>
                               <label for="email">Email</label>
                           </div>
                       </div>
                       <div className="row">
                           <div className="input-field col s12">
-                              <input id="pass" type="password" value={this.state.password} onChange={this.passC.bind(this)} className="validate"/>
+                              <input 
+                              id="pass" 
+                              type="password" 
+                              value={this.state.password} 
+                              onChange={this.passC.bind(this)} 
+                              disabled={this.props.isAuthenticating}
+                              className="validate"/>
                               <label for="pass">Password</label>
                           </div>
                       </div>
@@ -47,16 +59,15 @@ class LoginView extends React.Component {
                       <div className="row">
                           <div className="col m12">
                               <p className="right-align">
-                                  <button 
+                                  <input 
                                   className="btn btn-large waves-effect waves-light" 
-                                  type="button" 
+                                  type="submit" 
                                   disabled={this.props.isAuthenticating}
-                                  onClick={this.login.bind(this)}
-                                  name="action">Login</button>
+                                  name="action"/>
                               </p>
                           </div>
                       </div>
-                  </form>
+                  </form>  
               </div>
       </div>      
     );
