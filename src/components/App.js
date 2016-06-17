@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {logoutAndRedirect} from '../actions';
 
-class App extends React.Component {
+class App extends React.Component {   
 
     render () {
         return (

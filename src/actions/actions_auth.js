@@ -2,15 +2,15 @@ import { push } from 'react-router-redux'
 
 //User Module Imports
 import Path from '../api.js'
-import { LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS, LOGOUT_USER } from './actionTypes';
-
+import { LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS, LOGOUT_USER,USER_ACCESS } from './actionTypes';
+import { processUserAccesses } from '../utils'
 //Action Creators
 
 //Auth Actions
 export function loginUserSuccess(token,username,userAccess) {
   localStorage.setItem('gmpB2bToken', token);
   localStorage.setItem('gmpB2bUser', username);
-  localStorage.setItem('gmpB2bUserAccess',userAccess);
+  localStorage.setItem('gmpB2bUserAccess',JSON.stringify(userAccess));
   return {
     type: LOGIN_USER_SUCCESS,
     payload: {
@@ -105,4 +105,34 @@ export function loginUser(username, password, redirect="/") {
                 Materialize.toast(getState().user.statusText, 2000);
             })
     }
+}
+
+export function userAccessSuccess(access) {
+  return {
+    type: USER_ACCESS,
+    payload: {
+      companyAccess: access.companyAccess,
+      parkingAccess: access.parkingAccess,
+      parkingLotsAccess: access.parkingLotsAccess,
+      parkingSubLotsAccess: access.parkingSubLotsAccess
+    }
+  }
+}
+
+export function getUserAccess () {
+  return (dispatch,getState) => {
+    return fetch(`${Path.API_end}UserB2bs/access`,{
+                method: 'GET', 
+                headers: {"Authorization": getState().user.token}          
+                }
+            )
+            .then(response => response.ok ? response.json() : response.json().then(errorResponse => Promise.reject(errorResponse.error)))            
+            .then(response => {
+              let userAccesses = processUserAccesses(response);
+              dispatch(userAccessSuccess(userAccesses));
+            })
+            .catch(error => {
+                Materialize.toast(error.message, 2000);
+            })
+  }
 }

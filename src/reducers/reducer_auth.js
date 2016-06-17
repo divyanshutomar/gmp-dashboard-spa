@@ -10,7 +10,6 @@ const initialAuthState = {
 };
 
 export default function(state = initialAuthState,action){
-	console.log(action);
 	switch(action.type){
 		case LOGIN_USER_REQUEST: 
 			return (

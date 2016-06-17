@@ -4,7 +4,7 @@ import {Route, IndexRoute} from 'react-router';
 
 
 //User Module Imports
-import App from '../containers/App';
+import App from '../components/App';
 import HomeView from '../views/HomeView'
 import LoginView from '../views/LoginView'
 import {requireAuthentication} from '../hoc/AuthenticatedComponent';
