@@ -3,6 +3,7 @@ import {LOGIN_USER_REQUEST, LOGIN_USER_SUCCESS, LOGIN_USER_FAILURE, LOGOUT_USER}
 const initialAuthState = {
     token: null,
     userName: null,
+    userAccess: null,
     isAuthenticated: false,
     isAuthenticating: false,
     statusText: null
@@ -25,6 +26,7 @@ export default function(state = initialAuthState,action){
 	            'isAuthenticated': true,
 	            'token': action.payload.token,
 	            'userName': action.payload.username,
+	            'userAccess': action.payload.userAccess,
 	            'statusText': 'You have been successfully logged in.'
 	        	})
         	);
@@ -35,6 +37,7 @@ export default function(state = initialAuthState,action){
 	            'isAuthenticated': false,
 	            'token': null,
 	            'userName': null,
+	            'userAccess': null,
 	            'statusText': `Authentication Error: ${action.payload.status} ${action.payload.statusText}`
 	        	})
 	        );
@@ -44,6 +47,7 @@ export default function(state = initialAuthState,action){
 	            'isAuthenticated': false,
 	            'token': null,
 	            'userName': null,
+	            'userAccess': null,
 	            'statusText': 'You have been successfully logged out.'
 	        	})
 	        );

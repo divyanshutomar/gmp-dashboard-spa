@@ -10,8 +10,9 @@ import { loginUserSuccess } from './actions'
 //Checking for Auth Token
 let token = localStorage.getItem('gmpB2bToken');
 let B2bUser = localStorage.getItem('gmpB2bUser');
-if (token !== null && B2bUser !==null) {
-    appStore.dispatch(loginUserSuccess(token,B2bUser));
+let B2bUserAccess = localStorage.getItem('gmpB2bUserAccess');
+if (token !== null && B2bUser !==null && B2bUserAccess !==null) {
+    appStore.dispatch(loginUserSuccess(token,B2bUser,B2bUserAccess));
 }
 
 //Main App Rendering

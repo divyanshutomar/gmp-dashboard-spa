@@ -76,7 +76,8 @@ class LoginView extends React.Component {
 
 const mapStateToProps = (state) => ({
   isAuthenticating   : state.user.isAuthenticating,
-  statusText         : state.user.statusText
+  statusText         : state.user.statusText,
+  isAuthenticated    : state.user.isAuthenticated
 });
 
 const mapDispatchToProps = (dispatch) => ({

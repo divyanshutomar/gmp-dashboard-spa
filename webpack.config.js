@@ -18,6 +18,9 @@ module.exports = {
    ]
  },
  devtool: 'eval',
+ // devServer: {
+ //      historyApiFallback: true
+ //  },
  resolve: {
    extensions: ['', '.js', '.es6']
  },

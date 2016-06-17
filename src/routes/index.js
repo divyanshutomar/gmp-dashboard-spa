@@ -7,7 +7,7 @@ import {Route, IndexRoute} from 'react-router';
 import App from '../containers/App';
 import HomeView from '../views/HomeView'
 import LoginView from '../views/LoginView'
-import {requireAuthentication} from '../components/AuthenticatedComponent';
+import {requireAuthentication} from '../hoc/AuthenticatedComponent';
 
 export default (
     <Route path='/' component={App}>
