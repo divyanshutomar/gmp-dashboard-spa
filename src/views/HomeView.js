@@ -1,22 +1,33 @@
 import React from 'react';
 import {Link} from 'react-router';
-import ChartistGraph from 'react-chartist';
 import {getUserAccess} from '../actions';
 import {connect} from 'react-redux';
+import DateSelector from '../components/DateSelector'
+import ReportContainer from  '../components/ReportContainer'
 
 class HomeView extends React.Component {
-
-    componentWillMount() {
-        this.props.getUserAccess();
+    constructor(props) {
+        super(props);
     }
 	
     render () {
         return (
             <div>            	
-                <h1>Welcome to Admin Dashboard</h1>
+                <h4>Report Summary</h4>
+                <DateSelector/>
+                {
+                    this.props.isRangeReport ?
+                    <ReportContainer/> :
+                    <h5>No reports available for display.Fetch the reports first !</h5>
+                }
             </div>
         );
     }
 }
-export default connect(null,{getUserAccess})(HomeView);
+function mapStateToProps(state) {
+    return {
+        isRangeReport: state.userReports.isRangeReport
+    }
+}
+export default connect(mapStateToProps,{getUserAccess})(HomeView);
 

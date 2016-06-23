@@ -46,7 +46,7 @@ export default function(state = initialAuthState,action){
 	            'isAuthenticated': false,
 	            'token': null,
 	            'userName': null,
-	            'userAccess': null,
+	            // 'userAccess': null,
 	            'statusText': 'You have been successfully logged out.'
 	        	})
 	        );

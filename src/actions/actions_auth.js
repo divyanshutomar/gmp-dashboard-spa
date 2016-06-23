@@ -2,7 +2,7 @@ import { push } from 'react-router-redux'
 
 //User Module Imports
 import Path from '../api.js'
-import { LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS, LOGOUT_USER,USER_ACCESS } from './actionTypes';
+import { LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS, LOGOUT_USER,USER_ACCESS,CLEAR_USER_ACCESS } from './actionTypes';
 import { processUserAccesses } from '../utils'
 //Action Creators
 
@@ -48,7 +48,11 @@ export function logout() {
         type: LOGOUT_USER
     }
 }
-
+export function clearUserAccess() {
+  return {
+    type: CLEAR_USER_ACCESS
+  }
+}
 export function logoutAndRedirect() {
     return (dispatch,getState) => {
         return fetch(`${Path.API_end}UserB2bs/logout`,{
@@ -58,6 +62,7 @@ export function logoutAndRedirect() {
             )
             .then(response => response.ok ? response.status : response.json().then(errorResponse => Promise.reject(errorResponse.error)))            
             .then(responseStatus => {
+                    dispatch(clearUserAccess());
                     dispatch(logout());
                     Materialize.toast(getState().user.statusText, 2000);
                     dispatch(push('/login'));                  
@@ -65,44 +70,6 @@ export function logoutAndRedirect() {
             .catch(error => {
               Materialize.toast(`${error.status} : ${error.message} `, 2000);
               dispatch(push('/login'));
-            })
-    }
-}
-
-export function loginUser(username, password, redirect="/") {
-
-    return function(dispatch,getState) {
-        dispatch(loginUserRequest());
-        return fetch(`${Path.API_end}UserB2bs/xyz`,{
-                  method:'POST',
-                  headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                  body:`username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`              
-                }
-            )
-            .then(response => response.ok ? response.json() : response.json().then(errorResponse => Promise.reject(errorResponse.error)))            
-            .then(response => {
-                let userAccess = {
-                  userAcesses: response.userAccesses,
-                  companyIds : response.companyIds,
-                  parkingIds : response.parkingIds,
-                  parkingLotIds : response.parkingLotIds,
-                  parkingSubLotIds : response.parkingSubLotIds
-                }
-                try {
-                    dispatch(loginUserSuccess(response.authToken,response.username,userAccess));
-                    Materialize.toast(getState().user.statusText, 2000);
-                    dispatch(push(redirect));
-                } catch (e) {
-                    dispatch(loginUserFailure({                               
-                                status: 403,
-                                statusText: 'Invalid token'
-                    }));
-                    Materialize.toast(getState().user.statusText, 2000);
-                }
-            })
-            .catch(error => {
-                dispatch(loginUserFailure(error));
-                Materialize.toast(getState().user.statusText, 2000);
             })
     }
 }
@@ -128,11 +95,53 @@ export function getUserAccess () {
             )
             .then(response => response.ok ? response.json() : response.json().then(errorResponse => Promise.reject(errorResponse.error)))            
             .then(response => {
+              let redirect="/"
               let userAccesses = processUserAccesses(response);
               dispatch(userAccessSuccess(userAccesses));
+              dispatch(push(redirect));
             })
             .catch(error => {
                 Materialize.toast(error.message, 2000);
             })
   }
 }
+
+
+export function loginUser(username, password) {
+
+    return function(dispatch,getState) {
+        dispatch(loginUserRequest());
+        return fetch(`${Path.API_end}UserB2bs/xyz`,{
+                  method:'POST',
+                  headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                  body:`username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`              
+                }
+            )
+            .then(response => response.ok ? response.json() : response.json().then(errorResponse => Promise.reject(errorResponse.error)))            
+            .then(response => {
+                let userAccess = {
+                  userAccesses: response.userAccesses,
+                  companyIds : response.companyIds,
+                  parkingIds : response.parkingIds,
+                  parkingLotIds : response.parkingLotIds,
+                  parkingSubLotIds : response.parkingSubLotIds
+                }
+                try {
+                    dispatch(loginUserSuccess(response.authToken,response.username,userAccess));
+                    Materialize.toast(getState().user.statusText, 2000);
+                    dispatch(getUserAccess());                    
+                } catch (e) {
+                    dispatch(loginUserFailure({                               
+                                status: 403,
+                                statusText: 'Invalid token'
+                    }));
+                    Materialize.toast(getState().user.statusText, 2000);
+                }
+            })
+            .catch(error => {
+                dispatch(loginUserFailure(error));
+                Materialize.toast(getState().user.statusText, 2000);
+            })
+    }
+}
+

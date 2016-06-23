@@ -14,7 +14,7 @@ class LoginView extends React.Component {
       // redirectTo: redirectRoute
     };
   }
-
+  
   login(e) {
       e.preventDefault();
       this.props.actions.loginUser(this.state.email, this.state.password);
@@ -55,7 +55,6 @@ class LoginView extends React.Component {
                               <label for="pass">Password</label>
                           </div>
                       </div>
-                      <div className="divider"></div>
                       <div className="row">
                           <div className="col m12">
                               <p className="right-align">
