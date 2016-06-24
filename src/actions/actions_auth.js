@@ -4,6 +4,7 @@ import { push } from 'react-router-redux'
 import Path from '../api.js'
 import { LOGIN_USER_REQUEST, LOGIN_USER_FAILURE, LOGIN_USER_SUCCESS, LOGOUT_USER,USER_ACCESS,CLEAR_USER_ACCESS } from './actionTypes';
 import { processUserAccesses } from '../utils'
+import { clearUserReports,clearSelect } from './actions_reports'
 //Action Creators
 
 //Auth Actions
@@ -53,6 +54,7 @@ export function clearUserAccess() {
     type: CLEAR_USER_ACCESS
   }
 }
+
 export function logoutAndRedirect() {
     return (dispatch,getState) => {
         return fetch(`${Path.API_end}UserB2bs/logout`,{
@@ -64,6 +66,8 @@ export function logoutAndRedirect() {
             .then(responseStatus => {
                     dispatch(clearUserAccess());
                     dispatch(logout());
+                    dispatch(clearUserReports());
+                    dispatch(clearSelect());
                     Materialize.toast(getState().user.statusText, 2000);
                     dispatch(push('/login'));                  
             })

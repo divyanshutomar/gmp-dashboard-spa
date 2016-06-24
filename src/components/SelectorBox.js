@@ -23,7 +23,6 @@ class SelectorBox extends React.Component {
 	}
 
 	componentWillMount(){
-		this.props.selectUser(this.props.usernames[0]);
 	}
 	componentDidMount(){
 		$(document).ready(function() {

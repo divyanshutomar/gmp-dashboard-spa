@@ -78,7 +78,6 @@ export function processUserAccesses(response) {
 	return { companyAccess,parkingAccess,parkingLotsAccess,parkingSubLotsAccess }
 }
 
-
 export function checkCompanyAccessLevel(userAccesses){
 	let checkParking = _.filter(userAccesses,_.iteratee({'accessTitle': 'REPORT_PARKING'}));
 	let checkCompany = _.filter(userAccesses,_.iteratee({'accessTitle': 'REPORT_COMPANY'}));
@@ -108,6 +107,17 @@ export function generateUsers(reports){
 		usernames.push(report.username)
 	})
 	return usernames;
+}
+export function insertNames(reports,userAccess) {
+	reports.map((report)=>{
+		// report.companyName = getCompanyName(report.companyId,userAccess.companyAccess)
+		// report.parkingName = getParkingName(report.parkingId,userAccess.parkingAccess)
+		// report.parkingLotName = getParkingLName(report.parkingLotId,userAccess.parkingLotsAccess)
+		report.parkingReports.map((SublotStats)=>{
+			SublotStats.parkingSubLotName = getParkingSLName(SublotStats.parkingSubLotId,userAccess.parkingSubLotsAccess)
+		})
+	})
+	return reports
 }
 export function processUserRangeReports(comp,park,parkL,parkSL,report) {
 	let tableValues = []

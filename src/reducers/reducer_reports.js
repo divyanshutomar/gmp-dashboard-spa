@@ -1,4 +1,4 @@
-import { GET_USER_REPORTS } from '../actions/actionTypes'
+import { GET_USER_REPORTS,CLEAR_USER_REPORTS } from '../actions/actionTypes'
 
 const InitialReportState = {
 	rangeReport: null,
@@ -18,6 +18,15 @@ export default function (state = InitialReportState,action) {
 					'users': action.payload.usernames
 					})
 				);
+		case CLEAR_USER_REPORTS:
+			return (
+				Object.assign({},state,{
+					'rangeReport': null,
+					'isRangeReport': false,
+					'isUserWise': false,
+					'users': []
+					})
+				);	
 		default: return state	
 	}
 }

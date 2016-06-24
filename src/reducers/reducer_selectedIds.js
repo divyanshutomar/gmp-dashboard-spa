@@ -1,4 +1,4 @@
-import { SELECT_COMPANY,SELECT_PARKING,SELECT_PARKINGLOT,SELECT_USER } from '../actions/actionTypes'
+import { SELECT_COMPANY,SELECT_PARKING,SELECT_PARKINGLOT,SELECT_USER,CLEAR_SELECT } from '../actions/actionTypes'
 
 const InitialSelectState = {
 	companyId: null,
@@ -32,7 +32,16 @@ export default function (state=InitialSelectState,action) {
 				Object.assign({},state,{
 					'username': action.payload.username
 				})
-				);			
+				);
+		case CLEAR_SELECT:
+			return (
+				Object.assign({},state,{
+					'companyId': null,
+					'parkingId': null,
+					'parkingLotId': null,
+					'username': null
+				})
+				);					
 		default: return state			
 	}
 }

@@ -6,21 +6,14 @@ const rangeReportsSelector = state => state.userReports.rangeReport
 const selectedIdsSelector = state => state.selectedIds
 
 const getSelectedReports = (rangeReports,selectedIds) => {
-	// let resultReport;
-	// if (selectedIds.companyId == null && selectedIds.parkingId == null) {
-	// 	return rangeReports
-	// }
-	// else if (selectedIds.companyId != null && selectedIds.parkingId == null) {
-	// 	return _.filter(rangeReports,(report)=>{return report.companyId==selectedIds.companyId})
-	// }
-	// else if (selectedIds.companyId == null && selectedIds.parkingId != null) {
-	// 	return _.filter(rangeReports,(report)=>{return report.parkingId==selectedIds.parkingId})
-	// }
-	// else {
-	// 	return _.filter(rangeReports,(report)=>{return (report.companyId==selectedIds.companyId && report.parkingId==selectedIds.parkingId)})
-	// }
-	console.log(selectedIds)	
-
+	let filterObject = {
+		companyId: convertType(selectedIds.companyId),
+		parkingId: convertType(selectedIds.parkingId),
+		parkingLotId: convertType(selectedIds.parkingLotId),
+		username: selectedIds.username
+	}
+	let trueFilteredObj = _.omitBy(filterObject, _.isNil)
+    return (_.filter(rangeReports,_.iteratee(trueFilteredObj)));	
 }
 
 export default createSelector(

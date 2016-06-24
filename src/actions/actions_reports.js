@@ -1,7 +1,7 @@
 
 //User Module Imports
 import Path from '../api.js'
-import { GET_USER_REPORTS,SELECT_COMPANY,SELECT_PARKING,SELECT_PARKINGLOT,SELECT_USER } from './actionTypes'
+import { GET_USER_REPORTS,SELECT_COMPANY,SELECT_PARKING,SELECT_PARKINGLOT,SELECT_USER,CLEAR_SELECT,CLEAR_USER_REPORTS } from './actionTypes'
 import { generateUsers } from '../utils'
 
 export function rangeReportSucces(response,userWise,users) {
@@ -47,8 +47,16 @@ export function selectUser(username) {
         }
     });
 }
-
-
+export function clearSelect() {
+    return ({
+        type: CLEAR_SELECT
+    })
+}
+export function clearUserReports() {
+    return ({
+        type: CLEAR_USER_REPORTS
+    })
+}
 export function getUserReport (startDate,endDate,userWise) {
     console.log(startDate)
     console.log(endDate)
@@ -61,8 +69,15 @@ export function getUserReport (startDate,endDate,userWise) {
             )
             .then(response => response.ok ? response.json() : response.json().then(errorResponse => Promise.reject(errorResponse.error)))            
             .then(response => {
-                console.log(response)
-                let users =  userWise?generateUsers(response):[]                
+                let users =  userWise?generateUsers(response):[]
+                let selectedUser = getState().selectedIds.username
+                if(userWise){
+                    if (selectedUser == null) {
+                        dispatch(selectUser(users[0]))
+                    }                  
+                } else {
+                    dispatch(selectUser(null))
+                }                
             	dispatch(rangeReportSucces(response,userWise,users));
             })
             .catch(error => {

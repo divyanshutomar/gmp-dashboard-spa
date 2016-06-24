@@ -106,4 +106,5 @@ class DateSelector extends React.Component {
       );
     }
 }
+
 export default connect(null,{ getUserReport })(DateSelector);
