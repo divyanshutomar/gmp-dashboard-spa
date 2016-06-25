@@ -58,8 +58,6 @@ export function clearUserReports() {
     })
 }
 export function getUserReport (startDate,endDate,userWise) {
-    console.log(startDate)
-    console.log(endDate)
   return (dispatch,getState) => {
     let companyId = getState().userAccess.companyAccess[0].id
     return fetch(`${Path.API_end}Companies/${companyId}/userReport/details?from=${startDate}&to=${endDate}`,{

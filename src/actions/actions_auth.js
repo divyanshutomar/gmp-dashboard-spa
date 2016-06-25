@@ -64,12 +64,13 @@ export function logoutAndRedirect() {
             )
             .then(response => response.ok ? response.status : response.json().then(errorResponse => Promise.reject(errorResponse.error)))            
             .then(responseStatus => {
+                    dispatch(push('/login'));
                     dispatch(clearUserAccess());
                     dispatch(logout());
                     dispatch(clearUserReports());
                     dispatch(clearSelect());
                     Materialize.toast(getState().user.statusText, 2000);
-                    dispatch(push('/login'));                  
+                                      
             })
             .catch(error => {
               Materialize.toast(`${error.status} : ${error.message} `, 2000);

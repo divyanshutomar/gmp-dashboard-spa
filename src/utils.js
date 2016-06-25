@@ -5,50 +5,6 @@ export function convertType(value){
      ,isNumber = !isNaN(+(value));
   return isNumber && +(value) || !(value in values) && value || values[value];
 }
-
-// export function processUserAccesses (response) {
-// 	let companyAccess = []
-// 	let parkingAccess = []
-// 	let parkingLotsAccess = []
-// 	let parkingSubLotsAccess = []
-// 	if (response.length>0) {
-// 		for (let company of response) {
-// 		let C_parkings = []
-// 		let C_parkingLots = []
-// 		let C_parkingSubLots = []	
-// 		companyAccess.push({id:company.id,name:company.name,parkings:C_parkings,parkingLots:C_parkingLots,parkingSubLots:C_parkingSubLots})
-// 		let parkingsList = company.parkings
-// 		if (parkingsList.length>0){
-// 		  for (let parking of parkingsList) {
-// 		  	let P_parkingLots = []
-// 		  	let P_parkingSubLots = []						
-// 		  	parkingAccess.push({id:parking.id,name:parking.name,parkingLots:P_parkingLots,parkingSubLots:P_parkingSubLots})
-// 		  	C_parkings.push({id:parking.id,name:parking.name})
-// 		  	let parkingLotsList = parking.parkingLots
-// 		  	if (parkingLotsList.length>0) {
-// 		  		for (let parkingLot of parkingLotsList) {
-// 		  			let PL_parkingSubLots = []			
-// 		  			parkingLotsAccess.push({id:parkingLot.id,name:parkingLot.name,parkingSubLots: PL_parkingSubLots})
-// 		  			C_parkingLots.push({id:parkingLot.id,name:parkingLot.name})
-// 		  			P_parkingLots.push({id:parkingLot.id,name:parkingLot.name})
-// 		  			let parkingSubLotsList = parkingLot.parkingSubLots
-// 		  			if (parkingSubLotsList.length>0) {
-// 		  				for (let parkingSubLot of parkingSubLotsList){			
-// 		  					parkingSubLotsAccess.push({id:parkingSubLot.id,type:parkingSubLot.type})
-// 		  					C_parkingSubLots.push({id:parkingSubLot.id,type:parkingSubLot.type})
-// 		  					P_parkingSubLots.push({id:parkingSubLot.id,type:parkingSubLot.type})
-// 		  					PL_parkingSubLots.push({id:parkingSubLot.id,type:parkingSubLot.type})
-// 		  				}
-// 		  			}
-// 		  		}
-// 		  	}
-// 		  }
-// 		}  
-// 		}
-// 	}
-// 	console.log({companyAccess,parkingAccess,parkingLotsAccess,parkingSubLotsAccess})
-// 	return { companyAccess,parkingAccess,parkingLotsAccess,parkingSubLotsAccess };
-// }
 export function processUserAccesses(response) {
 	let companyAccess = []
 	let parkingAccess = []
@@ -119,46 +75,48 @@ export function insertNames(reports,userAccess) {
 	})
 	return reports
 }
-export function processUserRangeReports(comp,park,parkL,parkSL,report) {
-	let tableValues = []
-	let compName = getCompanyName(report.companyId,comp);
-	let parkName = getParkingName(report.parkingId,park);
-	let parkLName = getParkingLName(report.parkingLotId,parkL);
-	report.parkingReports.map(function (sublot) {
-		let tableVal = {companyName:compName,parkingName:parkName,parkingLotName:parkLName}
-		tableVal.parkingSubLotName = getParkingSLName(sublot.parkingSubLotId,parkSL);
-		tableVal.inC = sublot.checkInCount
-		tableVal.outC = sublot.checkOutCount
-		tableVal.focC = sublot.focCount
-		tableVal.ttC = sublot.ttCount
-		tableVal.total = sublot.checkInCount+sublot.checkOutCount+sublot.focCount+sublot.ttCount
-		tableVal.cid = report.companyId
-		tableVal.pid = report.parkingId
-		tableVal.plid = report.parkingLotId
-		tableVal.pslid = sublot.parkingSubLotId
-		tableValues.push(tableVal)
-	})
-	return tableValues
-}
 
-export function generateUserSumReport(groupedVal) {
-	let TableValues = []
-	_.forOwn(groupedVal, function(value,key) {
-		let tableVal = {companyName:value[0].companyName,parkingName:value[0].parkingName,parkingLotName:value[0].parkingLotName,parkingSubLotName:value[0].parkingSubLotName}
-  		tableVal.inC = 0
-		tableVal.outC = 0
-		tableVal.focC = 0
-		tableVal.ttC = 0
-		tableVal.total = 0 
-  		for (let report of value)
-  		{
-  			tableVal.inC += report.inC
-  			tableVal.outC += report.outC
-  			tableVal.focC += report.focC
-  			tableVal.ttC += report.ttC
-  			tableVal.total += report.total
-  		}
-  		TableValues.push(tableVal)
-	});
-	return TableValues;
+export function processUserSumReports(reports,parkingSLAccess) {
+	let processedReports = []
+	let SublotStatsArray = []
+	reports.map((userReport)=> {
+		userReport.parkingReports.map((SublotStats)=>{
+			SublotStatsArray.push(SublotStats)
+		})
+	})
+	parkingSLAccess.map((sublot)=>{
+		let sublotObj = {
+			checkInCount: 0,
+			checkOutCount: 0,
+			focCount: 0,
+			ttCount: 0,
+			checkInRevenue: 0,
+			checkOutRevenue: 0,
+			passCheckInCount: 0,
+			passCheckOutCount: 0,
+			acCount: 0,
+			parkingSubLotName: sublot.type
+		}
+		SublotStatsArray.map((SublotStats)=>{
+			if (sublot.type === SublotStats.parkingSubLotName) {
+				sublotObj.checkInCount += SublotStats.checkInCount
+				sublotObj.checkOutCount += SublotStats.checkOutCount
+				sublotObj.focCount += SublotStats.focCount
+				sublotObj.ttCount += SublotStats.ttCount
+				sublotObj.checkInRevenue += SublotStats.checkInRevenue
+				sublotObj.checkOutRevenue += SublotStats.checkOutRevenue
+				sublotObj.passCheckInCount += SublotStats.passCheckInCount
+				sublotObj.passCheckOutCount += SublotStats.passCheckOutCount
+				sublotObj.acCount += SublotStats.acCount
+			}
+		})
+		processedReports.push(sublotObj)
+	})
+	let parkingSLArray = []
+	parkingSLAccess.map((sublot)=>{parkingSLArray.push(sublot.type)})
+	let filteredReports = _.filter(SublotStatsArray,function(SubLot) {
+		return (parkingSLArray.indexOf(SubLot.parkingSubLotName) === -1)
+	})
+
+	return (_.concat(processedReports,filteredReports))
 }

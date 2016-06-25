@@ -1,4 +1,4 @@
-const HOST = "http://dev.api.getmyparking.com";
+const HOST = "http://stage.api.getmyparking.com";
 const PORT = "5000";
 const BASE_URL = "/api/v1/"
 const API_end = HOST+":"+PORT+BASE_URL;
