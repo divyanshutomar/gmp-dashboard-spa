@@ -5,13 +5,13 @@ import {Route, IndexRoute} from 'react-router';
 
 //User Module Imports
 import App from '../components/App';
-import HomeView from '../views/HomeView'
+import CompanyReportView from '../views/CompanyReportView'
 import LoginView from '../views/LoginView'
 import {requireAuthentication} from '../hoc/AuthenticatedComponent';
 
 export default (
     <Route path='/' component={App}>
-        <IndexRoute component={requireAuthentication(HomeView)}/>
+        <IndexRoute component={requireAuthentication(CompanyReportView)}/>
         <Route path="login" component={LoginView}/>
     </Route>
 );

@@ -37,7 +37,12 @@ export function processUserAccesses(response) {
 export function checkCompanyAccessLevel(userAccesses){
 	let checkParking = _.filter(userAccesses,_.iteratee({'accessTitle': 'REPORT_PARKING'}));
 	let checkCompany = _.filter(userAccesses,_.iteratee({'accessTitle': 'REPORT_COMPANY'}));
-	return checkCompany.length>0 && checkParking.length == 0 ? true : false	
+	return checkCompany.length > 0 && checkParking.length == 0 ? true : false	
+}
+export function checkReportAccessLevel(userAccess) {
+	let checkParking = _.filter(userAccesses,_.iteratee({'accessTitle': 'REPORT_PARKING'}));
+	let checkCompany = _.filter(userAccesses,_.iteratee({'accessTitle': 'REPORT_COMPANY'}));
+	return checkCompany.length == 0 && checkParking.length == 0 ? true : false
 }
 
 //Report Processing Functions
@@ -79,12 +84,15 @@ export function insertNames(reports,userAccess) {
 export function processUserSumReports(reports,parkingSLAccess) {
 	let processedReports = []
 	let SublotStatsArray = []
+	let parkingSLArray = []
+	parkingSLAccess.map((sublot)=>{parkingSLArray.push(sublot.type)})
+	parkingSLArray = _.uniq(parkingSLArray)
 	reports.map((userReport)=> {
 		userReport.parkingReports.map((SublotStats)=>{
 			SublotStatsArray.push(SublotStats)
 		})
 	})
-	parkingSLAccess.map((sublot)=>{
+	parkingSLArray.map((sublot)=>{
 		let sublotObj = {
 			checkInCount: 0,
 			checkOutCount: 0,
@@ -95,10 +103,10 @@ export function processUserSumReports(reports,parkingSLAccess) {
 			passCheckInCount: 0,
 			passCheckOutCount: 0,
 			acCount: 0,
-			parkingSubLotName: sublot.type
+			parkingSubLotName: sublot
 		}
 		SublotStatsArray.map((SublotStats)=>{
-			if (sublot.type === SublotStats.parkingSubLotName) {
+			if (sublot === SublotStats.parkingSubLotName) {
 				sublotObj.checkInCount += SublotStats.checkInCount
 				sublotObj.checkOutCount += SublotStats.checkOutCount
 				sublotObj.focCount += SublotStats.focCount
@@ -112,11 +120,9 @@ export function processUserSumReports(reports,parkingSLAccess) {
 		})
 		processedReports.push(sublotObj)
 	})
-	let parkingSLArray = []
-	parkingSLAccess.map((sublot)=>{parkingSLArray.push(sublot.type)})
+	
 	let filteredReports = _.filter(SublotStatsArray,function(SubLot) {
 		return (parkingSLArray.indexOf(SubLot.parkingSubLotName) === -1)
 	})
-
 	return (_.concat(processedReports,filteredReports))
 }

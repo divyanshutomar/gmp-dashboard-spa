@@ -104,6 +104,7 @@ export function getUserAccess () {
               let userAccesses = processUserAccesses(response);
               dispatch(userAccessSuccess(userAccesses));
               dispatch(push(redirect));
+              Materialize.toast(getState().user.statusText, 2000);
             })
             .catch(error => {
                 Materialize.toast(error.message, 2000);
@@ -133,7 +134,6 @@ export function loginUser(username, password) {
                 }
                 try {
                     dispatch(loginUserSuccess(response.authToken,response.username,userAccess));
-                    Materialize.toast(getState().user.statusText, 2000);
                     dispatch(getUserAccess());                    
                 } catch (e) {
                     dispatch(loginUserFailure({                               

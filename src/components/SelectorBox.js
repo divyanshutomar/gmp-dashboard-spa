@@ -1,7 +1,7 @@
 import React from 'react'
 import { selectCompany,selectParking,selectParkingLot,selectUser } from '../actions/actions_reports'
 import { connect } from 'react-redux';
-import { checkCompanyAccessLevel } from '../utils'
+import { checkCompanyAccessLevel,convertType } from '../utils'
 import _ from 'lodash'
 
 
@@ -30,8 +30,8 @@ class SelectorBox extends React.Component {
 		});
 	}
 	changeCompanySelect(event){
-		let selectedId = event.target.value
-		if (selectedId == "null") {
+		let selectedId = convertType(event.target.value)
+		if (selectedId === null) {
 			let allC = this.props.companyAccess;
 			let allP = this.props.parkingAccess;
 			let allPL = this.props.parkingLotsAccess;
@@ -53,9 +53,9 @@ class SelectorBox extends React.Component {
 	}
 
 	changeParkingSelect(event){
-		let selectedId = event.target.value
-		if (selectedId == "null") {
-			if(this.state.selectedCid=="null"){
+		let selectedId = convertType(event.target.value)
+		if (selectedId === null) {
+			if(this.state.selectedCid === null){
 				this.setState({
 					parkings: this.props.parkingAccess,
 					parkingLots: this.props.parkingLotsAccess
@@ -80,10 +80,10 @@ class SelectorBox extends React.Component {
 		this.props.selectParking(selectedId)
 	}
 	changeParkingLotSelect(event){
-		let selectedId = event.target.value
-		if (selectedId == "null") {
-			if (this.state.selectedPid=="null") {
-				if (this.state.selectedCid=="null"){
+		let selectedId = convertType(event.target.value)
+		if (selectedId === null) {
+			if (this.state.selectedPid === null) {
+				if (this.state.selectedCid === null) {
 					this.setState({
 						parkingLots: this.props.parkingLotsAccess
 					})

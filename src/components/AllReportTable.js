@@ -14,7 +14,7 @@ export const AllReportTable = (props) => {
 		              <th>Out(Count)</th>
 		              <th>FOC(Count)</th>
 		              <th>TT(Count)</th>
-		              <th>Total</th>
+		              <th>Total(Rs.)</th>
 		          </tr>
 		        </thead>
 		        <tbody>
@@ -23,7 +23,7 @@ export const AllReportTable = (props) => {
 		            <td>{props.report.checkOutCount}</td>
 		            <td>{props.report.focCount}</td>
 		            <td>{props.report.ttCount}</td>
-		            <td>{props.report.checkInCount+props.report.checkOutCount+props.report.focCount+props.report.ttCount}</td>
+		            <td>{props.report.checkInRevenue+props.report.checkOutRevenue}</td>
 	          	</tr>
 		        </tbody>
 		       </table>   

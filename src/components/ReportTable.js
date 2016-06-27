@@ -22,7 +22,7 @@ class ReportTable extends React.Component {
 		              <th>Out(Count)</th>
 		              <th>FOC(Count)</th>
 		              <th>TT(Count)</th>
-		              <th>Total</th>
+		              <th>Total(Rs.)</th>
 		          </tr>
 		        </thead>
 		        <tbody>
@@ -35,7 +35,7 @@ class ReportTable extends React.Component {
 				            <td>{sublotStats.checkOutCount}</td>
 				            <td>{sublotStats.focCount}</td>
 				            <td>{sublotStats.ttCount}</td>
-				            <td>{sublotStats.checkInCount+sublotStats.checkOutCount+sublotStats.focCount+sublotStats.ttCount}</td>
+				            <td>{sublotStats.checkInRevenue+sublotStats.checkOutRevenue}</td>
 			          	</tr>
 			          	)}				          
 			          )
